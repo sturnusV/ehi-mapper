@@ -1,0 +1,22 @@
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "./Dockerfile.prod"
+
+[deploy]
+numReplicas = 1
+restartPolicyType = "ON_FAILURE"
+
+# Environment variables for the entire project
+[deploy.environmentVariables]
+NODE_ENV = "production"
+
+# Service definitions
+[[services]]
+name = "web"
+httpPort = 3001
+healthcheckPath = "/health"
+healthcheckTimeout = 30
+
+[[services.ports]]
+port = 3001
+handlers = ["http"]
