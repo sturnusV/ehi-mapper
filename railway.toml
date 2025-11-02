@@ -12,3 +12,7 @@ healthcheckPath = "/health"
 
 [deploy.environmentVariables]
 NODE_ENV = "production"
+
+# Add build-time environment
+[build.environmentVariables]
+NODE_ENV = "production"
