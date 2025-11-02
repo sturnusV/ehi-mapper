@@ -1,0 +1,13 @@
+{
+  "name": "ehi-mapper",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "cd server && npm run build",
+    "start": "cd server && node dist/app.js",
+    "dev": "cd server && npm run dev"
+  },
+  "engines": {
+    "node": "20.x"
+  }
+}

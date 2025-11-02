@@ -1,22 +1,15 @@
 [build]
-builder = "DOCKERFILE"
-dockerfilePath = "./Dockerfile.prod"
+builder = "NIXPACKS"
 
 [deploy]
 numReplicas = 1
 restartPolicyType = "ON_FAILURE"
+startCommand = "npm start"
 
-# Environment variables for the entire project
-[deploy.environmentVariables]
-NODE_ENV = "production"
-
-# Service definitions
 [[services]]
-name = "web"
+name = "ehi-mapper"
 httpPort = 3001
 healthcheckPath = "/health"
-healthcheckTimeout = 30
 
-[[services.ports]]
-port = 3001
-handlers = ["http"]
+[deploy.environmentVariables]
+NODE_ENV = "production"
