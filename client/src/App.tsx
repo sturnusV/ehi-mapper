@@ -653,8 +653,8 @@ function App() {
         console.log('🔄 Fetching data from backend...');
 
         const [locationsResponse, enhancedSpatialResponse] = await Promise.all([
-          fetch('${API_BASE}/api/ehi-locations'),
-          fetch('${API_BASE}/api/enhanced-spatial-data')
+          fetch(`${API_BASE}/api/ehi-locations`),
+          fetch(`${API_BASE}/api/enhanced-spatial-data`)
         ]);
 
         const locationsResult = await locationsResponse.json();
@@ -697,7 +697,7 @@ function App() {
       setError(null);
       // Do NOT clear ehiResults here, let the new results overwrite it or error out
 
-      const response = await fetch('${API_BASE}/api/calculate-ehi', {
+      const response = await fetch(`${API_BASE}/api/calculate-ehi`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ weights })
