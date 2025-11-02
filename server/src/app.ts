@@ -24,21 +24,9 @@ testConnection();
 
 // Initialize automation when server starts (AFTER db connection)
 // Use setTimeout to ensure DB is ready
-
-/*
 setTimeout(() => {
   AutomationScheduler.initialize();
 }, 5000);
-*/
-
-app.post('/api/init-data', async (req, res) => {
-  try {
-    await AutomationScheduler.runFullDataPipeline();
-    res.json({ success: true, message: 'Data initialized successfully' });
-  } catch (error) {
-    res.status(500).json({ success: false, error: 'Data initialization failed' });
-  }
-});
 
 // Manual data control endpoints
 app.post('/api/data/refresh', async (req, res) => {

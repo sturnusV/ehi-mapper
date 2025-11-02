@@ -3,10 +3,10 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-// Parse Railway's DATABASE_URL or use defaults
+// Parse Railway's DATABASE_URL or use local development
 function getDatabaseConfig() {
-  // Railway provides DATABASE_URL in production
   if (process.env.DATABASE_URL) {
+    // Parse Railway's DATABASE_URL format: postgresql://user:pass@host:port/db
     const url = new URL(process.env.DATABASE_URL);
     return {
       host: url.hostname,
@@ -18,7 +18,7 @@ function getDatabaseConfig() {
     };
   }
 
-  // Fallback for local development (your docker-compose)
+  // Local development fallback
   return {
     host: process.env.DB_HOST || 'localhost',
     port: parseInt(process.env.DB_PORT || '5432'),

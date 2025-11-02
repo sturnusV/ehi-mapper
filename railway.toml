@@ -1,18 +1,16 @@
 [build]
 builder = "NIXPACKS"
+buildCommand = "cd server && npm install && npm run build"
 
 [deploy]
+startCommand = "cd server && npm start"
 numReplicas = 1
 restartPolicyType = "ON_FAILURE"
 
 [[services]]
-name = "ehi-mapper"
+name = "ehi-backend"
 httpPort = 3001
 healthcheckPath = "/health"
 
 [deploy.environmentVariables]
-NODE_ENV = "production"
-
-# Add build-time environment
-[build.environmentVariables]
 NODE_ENV = "production"
