@@ -3,17 +3,16 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-// Parse Railway's DATABASE_URL or use local development
 function getDatabaseConfig() {
+  // Railway provides DATABASE_URL, local development uses separate vars
   if (process.env.DATABASE_URL) {
-    // Parse Railway's DATABASE_URL format: postgresql://user:pass@host:port/db
     const url = new URL(process.env.DATABASE_URL);
     return {
       host: url.hostname,
       port: parseInt(url.port) || 5432,
       user: url.username,
       password: url.password,
-      database: url.pathname.slice(1), // Remove leading slash
+      database: url.pathname.slice(1),
       ssl: { rejectUnauthorized: false } // Required for Railway
     };
   }

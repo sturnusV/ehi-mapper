@@ -1,0 +1,14 @@
+{
+  "name": "ehi-mapper",
+  "version": "1.0.0",
+  "description": "Ecosystem Health Index Mapper",
+  "scripts": {
+    "build": "cd server && npm run build",
+    "start": "cd server && npm start",
+    "dev": "cd server && npm run dev",
+    "migrate": "cd server && npm run migrate"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
