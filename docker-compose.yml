@@ -15,6 +15,45 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 30s  # ADDED: Give more time for initialization
+    restart: unless-stopped  # ADDED: Auto-restart if needed
+
+  server:
+    build: 
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      DB_HOST: postgis
+      DB_PORT: 5432
+      DB_USER: ehi_user
+      DB_PASSWORD: ehi_password
+      DB_NAME: ehi_mapper
+      NODE_ENV: development
+      PORT: 3001
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+    depends_on:
+      postgis:
+        condition: service_healthy
+    command: npm run dev
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:3001
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+    depends_on:
+      - server
+    command: npm run dev -- --host
 
 volumes:
   postgres_data:
