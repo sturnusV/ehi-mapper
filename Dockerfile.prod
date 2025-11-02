@@ -5,7 +5,9 @@ WORKDIR /app/server
 
 # Copy server package files
 COPY server/package*.json ./
-RUN npm ci --only=production
+
+# Install ALL dependencies (including dev) for building
+RUN npm ci
 
 # Copy server source and build
 COPY server/ ./
@@ -29,13 +31,16 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-# Install Postgres client for health checks (optional)
+# Install Postgres client for health checks
 RUN apk add --no-cache postgresql-client
 
 # Copy built backend
 COPY --from=backend-builder /app/server/dist ./server/dist
 COPY --from=backend-builder /app/server/package*.json ./server/
-COPY --from=backend-builder /app/server/node_modules ./server/node_modules
+
+# Install ONLY production dependencies for runtime
+WORKDIR /app/server
+RUN npm ci --only=production
 
 # Copy built frontend
 COPY --from=frontend-builder /app/client/dist ./client/dist
