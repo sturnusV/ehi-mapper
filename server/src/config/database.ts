@@ -3,33 +3,6 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-function getDatabaseConfig() {
-  // Railway provides DATABASE_URL, local development uses separate vars
-  if (process.env.DATABASE_URL) {
-    const url = new URL(process.env.DATABASE_URL);
-    return {
-      host: url.hostname,
-      port: parseInt(url.port) || 5432,
-      user: url.username,
-      password: url.password,
-      database: url.pathname.slice(1),
-      ssl: { rejectUnauthorized: false } // Required for Railway
-    };
-  }
-
-  // Local development fallback
-  return {
-    host: process.env.DB_HOST || 'localhost',
-    port: parseInt(process.env.DB_PORT || '5432'),
-    user: process.env.DB_USER || 'ehi_user',
-    password: process.env.DB_PASSWORD || 'ehi_password',
-    database: process.env.DB_NAME || 'ehi_mapper',
-    ssl: false
-  };
-}
-
-const dbConfig = getDatabaseConfig();
-
 const db = knex({
   client: 'pg',
   connection: {
@@ -58,7 +31,7 @@ const db = knex({
 // Test database connection with retry logic
 export const testConnection = async (maxRetries = 10, retryDelay = 3000) => {
   console.log(`🔗 Attempting to connect to database at ${process.env.DB_HOST}:${process.env.DB_PORT}`);
-
+  
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
       const result = await db.raw('SELECT version()');
@@ -67,12 +40,12 @@ export const testConnection = async (maxRetries = 10, retryDelay = 3000) => {
       return true;
     } catch (error: any) {
       console.log(`❌ Database connection attempt ${attempt}/${maxRetries} failed: ${error.message}`);
-
+      
       if (attempt === maxRetries) {
         console.error('💥 Final database connection error:', error);
         return false;
       }
-
+      
       console.log(`⏳ Waiting ${retryDelay}ms before retry...`);
       await new Promise(resolve => setTimeout(resolve, retryDelay));
     }

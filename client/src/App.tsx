@@ -79,8 +79,6 @@ interface EHIControlsProps {
 
 type LayerKey = 'biodiversity' | 'climate' | 'human_pressure' | 'vegetation';
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001';
-
 // --- Component: EHIControls ---
 const EHIControls: React.FC<EHIControlsProps> = ({
   weights,
@@ -653,8 +651,8 @@ function App() {
         console.log('🔄 Fetching data from backend...');
 
         const [locationsResponse, enhancedSpatialResponse] = await Promise.all([
-          fetch(`${API_BASE}/api/ehi-locations`),
-          fetch(`${API_BASE}/api/enhanced-spatial-data`)
+          fetch('http://localhost:3001/api/ehi-locations'),
+          fetch('http://localhost:3001/api/enhanced-spatial-data')
         ]);
 
         const locationsResult = await locationsResponse.json();
@@ -697,7 +695,7 @@ function App() {
       setError(null);
       // Do NOT clear ehiResults here, let the new results overwrite it or error out
 
-      const response = await fetch(`${API_BASE}/api/calculate-ehi`, {
+      const response = await fetch('http://localhost:3001/api/calculate-ehi', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ weights })

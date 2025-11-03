@@ -1,30 +1,28 @@
+FROM node:20-alpine as builder
+
+# ... (Copy package files, install dependencies) ...
+# Copy source code
+
+# *** BUILD THE TYPESCRIPT INTO JAVASCRIPT ***
+RUN npm run build
+
+# --- Final Production Stage ---
 FROM node:20-alpine
-
-# Add build arguments for better caching
-ARG NODE_ENV=development
+ARG NODE_ENV=production
 ENV NODE_ENV=${NODE_ENV}
-
 WORKDIR /app
 
-# Copy package files first (for better caching)
+# Copy production dependencies only
 COPY package*.json ./
+RUN npm ci --only=production
 
-# Install dependencies based on environment
-RUN if [ "$NODE_ENV" = "development" ]; then \
-      npm ci; \
-    else \
-      npm ci --only=production; \
-    fi
-
-# Copy source code
-COPY . .
-
-# Build the app (for production)
-RUN if [ "$NODE_ENV" != "development" ]; then \
-      npm run build; \
-    fi
+# Copy the *compiled* application files from the builder stage
+COPY --from=builder /app/dist ./dist 
+COPY --from=builder /app/node_modules ./node_modules
+COPY package*.json .
 
 EXPOSE 3001
 
-# Use a better startup command
-CMD ["npm", "run", "dev"]
+# *** USE PRODUCTION START COMMAND ***
+# This command runs the compiled JavaScript file directly with Node
+CMD ["npm", "start"] # or CMD ["node", "dist/app.js"] if you prefer
