@@ -7,6 +7,7 @@ import logo from './assets/react.svg';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import WarningIcon from '@mui/icons-material/Warning';
+import { apiFetch } from './config/api';
 
 import {
   AppBar,
@@ -651,8 +652,8 @@ function App() {
         console.log('🔄 Fetching data from backend...');
 
         const [locationsResponse, enhancedSpatialResponse] = await Promise.all([
-          fetch('http://localhost:3001/api/ehi-locations'),
-          fetch('http://localhost:3001/api/enhanced-spatial-data')
+          apiFetch('/api/ehi-locations'),
+          apiFetch('/api/enhanced-spatial-data')
         ]);
 
         const locationsResult = await locationsResponse.json();
@@ -695,7 +696,7 @@ function App() {
       setError(null);
       // Do NOT clear ehiResults here, let the new results overwrite it or error out
 
-      const response = await fetch('http://localhost:3001/api/calculate-ehi', {
+      const response = await apiFetch('/api/calculate-ehi', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ weights })
